@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import authRoutes from './routes/authRoute.js';
 import notifRoutes from './routes/notificationRoute.js';
+import hotelRoutes from "./routes/hotelRoute.js";
 import { testConnection } from './config/database.js';
 // a supp apres
 import { pool } from './config/database.js';
@@ -17,6 +18,11 @@ const PORT = process.env.PORT || 3000;
 app.use(morgan('dev')); 
 app.use(express.json());
 app.use(cors());
+// To serve images
+app.use("/api/uploads", express.static("uploads"));
+
+// Routes
+app.use("/api/hotels", hotelRoutes);
 
 // Routes
 app.use('/api/auth', authRoutes);
