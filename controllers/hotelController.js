@@ -7,7 +7,10 @@ export const hotelController = {
       const hotel = await hotelService.createHotel(req.body);
       res.status(201).json(hotel);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(500).json({ 
+        success: false,
+        error: e.message 
+      });
     }
   },
 

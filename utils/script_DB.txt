@@ -59,3 +59,29 @@ CREATE TABLE hotels (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE TABLE trips (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    type VARCHAR(50) NOT NULL CHECK (type IN ('national','international','religieuse')),
+
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+
+    base_price DECIMAL(10,2) NOT NULL,
+
+    images TEXT[] DEFAULT '{}', -- tableau de strings
+    equipment_list TEXT,         -- HTML code
+
+    destination_wilaya VARCHAR(100),
+    destination_country VARCHAR(100),
+
+    omra_category VARCHAR(50)
+        CHECK (omra_category IN ('classic','vip') OR omra_category IS NULL),
+
+    created_at TIMESTAMP DEFAULT NOW()
+);

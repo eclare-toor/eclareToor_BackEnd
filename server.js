@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/authRoute.js';
 import notifRoutes from './routes/notificationRoute.js';
 import hotelRoutes from "./routes/hotelRoute.js";
+import tripRoutes from "./routes/tripRoute.js";
 import { testConnection } from './config/database.js';
 // a supp apres
 import { pool } from './config/database.js';
@@ -23,6 +24,7 @@ app.use("/api/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/hotels", hotelRoutes);
+app.use("/api/trips", tripRoutes);
 
 // Routes
 app.use('/api/auth', authRoutes);
