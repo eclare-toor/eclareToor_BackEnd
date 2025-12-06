@@ -1,0 +1,5 @@
++ ajouter champs dans sign up
++ delete tous => itenerare + hotel_trip
++ update many , deletemany =>itenerare + hotel_trip
++ fichier temps 
++ securise les image

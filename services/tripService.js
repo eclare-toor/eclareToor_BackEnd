@@ -116,9 +116,13 @@ export const tripService = {
   },
 
   async deleteTrip(id) {
-    const trip = await this.getById(id);
-    (trip.images || []).forEach(img => fileService.deleteImage(img));
-
-    await tripModel.delete(id);
+    try {
+      const trip = await this.getById(id);
+     (trip.images || []).forEach(img => fileService.deleteImage(img));
+     await tripModel.delete(id);
+      // await tripItineraryModel.deleteByTripId(id);
+    } catch (err) {
+      throw new Error("Error deleting trip : " + err.message);
+    }
   }
 };
