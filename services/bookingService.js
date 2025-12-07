@@ -91,9 +91,9 @@ export const bookingService = {
       // Status update management
       if (data.status) {
         if (user.role !== "admin") {
-          // if (data.status !== "CANCELLED" || booking.status !== "PENDING") {
-          //   throw new Error("User can only cancel their pending booking");
-          // }
+          if (data.status !== "CANCELLED" || booking.status !== "PENDING") {
+            throw new Error("User can only cancel their pending booking");
+          }
         }
         fields.status = data.status;
       }
