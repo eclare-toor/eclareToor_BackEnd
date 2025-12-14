@@ -4,11 +4,11 @@ import { fileService } from "./fileService.js";
 export const hotelService = {
   async createHotel(data) {
     try {
-      const { name, city, stars, address, maps_url } = data;
+      const { name, city, stars, address, maps_url ,type} = data;
       if (!name || !city || !stars || !address) {
         throw new Error("Missing required fields");
       }
-      return await hotelModel.create(name, city, stars, address, maps_url);
+      return await hotelModel.create(name, city, stars, address, maps_url , type);
     } catch (error) {
       throw new Error("Error creating hotel: " + error.message);
     }
@@ -17,6 +17,15 @@ export const hotelService = {
   async getAll() {
     try {
       const hotels = await hotelModel.getAll();
+      return hotels;
+    } catch (error) {
+      throw new Error("Error fetching hotels: " + error.message);
+    }
+  },
+
+  async getByType(type) {
+    try {
+      const hotels = await hotelModel.getByType(type);
       return hotels;
     } catch (error) {
       throw new Error("Error fetching hotels: " + error.message);
@@ -46,7 +55,8 @@ export const hotelService = {
         city: data.city ?? hotel.city,
         stars: data.stars ?? hotel.stars,
         address: data.address ?? hotel.address,
-        maps_url: data.maps_url ?? hotel.maps_url
+        maps_url: data.maps_url ?? hotel.maps_url,
+        type: data.type ?? hotel.type
       };
 
       return await hotelModel.updateInfo(id, updated);

@@ -1,11 +1,11 @@
-+ ajouter champs dans sign up/ regler service
++ ajouter champs dans sign up/ regler service.   DONE
 + delete tous => itenerare + hotel_trip
 + update many , deletemany =>itenerare + hotel_trip
 + fichier temps 
 + securise les image
-+ admin peut ajouter user .
++ admin peut ajouter user .   DONE
 + request / response => verifier user requist his , notification
-+ add get hotels name , champs catg(makka , madina , tourisme)
++ add get hotels name , champs catg(makka , madina , tourisme).  DONE
 
 
 tocker user : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNjQxY2IxMC02ODMzLTRmM2ItYjU3Ni05NTY0NjJmMTA1Y2QiLCJlbWFpbCI6InVzZXI4QGV4YW1wbGUuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NjU3MDM3OTEsImV4cCI6MTc2NjMwODU5MX0.4kS3ThNAki3yfNwisPQpkoM7KgBb_R4RHKHWwZHE1O8

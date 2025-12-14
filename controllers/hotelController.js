@@ -27,6 +27,19 @@ export const hotelController = {
     }
   },
 
+  getByType: async (req, res) => {
+    try {
+      const hotels = await hotelService.getByType(req.params.type);
+      res.json(hotels);
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({
+        success: false,
+        message: error.message || "An error occurred while fetching hotel"
+      });
+    }
+  },
+
   getById: async (req, res) => {
     try {
       const hotel = await hotelService.getById(req.params.id);

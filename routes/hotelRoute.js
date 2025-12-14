@@ -10,6 +10,7 @@ const upload = multer({ dest: "temp/" });
 router.post("/", authenticateToken , requireAnyRole(["admin"]) , hotelController.create);
 router.get("/", hotelController.getAll);
 router.get("/:id", hotelController.getById);
+router.get("/type/:type", hotelController.getByType);
 router.put("/:id", authenticateToken , requireAnyRole(["admin"]) ,hotelController.updateInfo);
 
 // Add new images
