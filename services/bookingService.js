@@ -8,6 +8,8 @@ export const bookingService = {
     const { role, userId} = user;
     const { user_id = null , trip_id, passengers_adult, passengers_child = 0, passengers_baby = 0 } = data;
     let userExists = null;
+    let finalUserId;
+
     if (!trip_id || passengers_adult == null) {
       throw new Error("Missing required fields");
     }
@@ -16,7 +18,6 @@ export const bookingService = {
     const trip = await tripModel.getById(trip_id);
     if (!trip) throw new Error("Trip not found");
 
-    let finalUserId;
 
     if (role === "admin") {
 
@@ -35,9 +36,10 @@ export const bookingService = {
 
     } else {
       // USER → ne peut pas spécifier un autre user_id
+      userExists = await UserModel.findById(userId);
       finalUserId = userId;
     }
-
+    console.log("Final User ID for booking:", finalUserId);
     //verifier que l'utilisateur n'a pas déjà une réservation pour ce voyage
     const existingBookings = await bookingModel.getByUser(finalUserId);
     const hasExistingBooking = existingBookings.some(
@@ -100,7 +102,6 @@ export const bookingService = {
 
       // DB update
       const updatedBooking = await bookingModel.update(bookingId, fields);
-
       // ---------------------------
       // 🔔 NOTIFICATIONS (safe mode)
       // ---------------------------
@@ -118,7 +119,7 @@ export const bookingService = {
 
           } else {
             // User cancels their booking → notify admins
-            const u = await findUserById(updatedBooking.user_id);
+            const u = await UserModel.findById(updatedBooking.user_id);
 
             await NotificationService.notifyAdminsBookingCancelledByUser({
               bookingId: updatedBooking.id,
@@ -170,7 +171,7 @@ export const bookingService = {
       if(!user_id){
         throw new Error("Admin must provide user_id to get bookings");
       }
-      const userExists = await findUserById(user_id);
+      const userExists = await UserModel.findById(user_id);
       if (!userExists) {
         throw new Error("User not found");
       }

@@ -48,7 +48,7 @@ const TEMPLATES = {
     NEW_BOOKING: {
       type: 'admin_new_booking',
       title: '🏨 Nouvelle réservation',
-      message: 'Nouvelle réservation pour {tripName} par {userName}.',
+      message: 'Nouvelle réservation pour {tripName} pour  {userName}.',
       action_url: '/admin/bookings/{bookingId}'
     },
     PAYMENT_RECEIVED: {
