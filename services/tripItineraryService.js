@@ -20,10 +20,6 @@ async addMany(trip_id, itineraries) {
 
     const tripStart = new Date(trip.start_date);
     const tripEnd = new Date(trip.end_date);
-
-    if (itineraryDate < tripStart || itineraryDate > tripEnd) {
-      throw new Error(`Date ${item.day_date} out of trip range`);
-    }
     const inserted = [];
 
     for (const item of itineraries) {
