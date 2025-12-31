@@ -69,5 +69,29 @@ export const requestService = {
     } catch (err) {
       throw new Error("Failed to delete requests: " + err.message);
     }
+  },
+
+  getByUser: async(user, data) =>{
+    let userId;
+    // 🔐 ADMIN
+    if (user.role === "admin") {
+      const { user_id = null } = data;
+
+      if (!user_id) {
+        throw new Error("Admin must provide user_id to get requests");
+      }
+
+      const userExists = await UserModel.findById(user_id);
+      if (!userExists) {
+        throw new Error("User not found");
+      }
+
+      userId = user_id;
+    }
+    // 🔐 USER
+    else {
+      userId = user.userId;
+    }
+    return await requestModel.getByUser(userId);
   }
 };

@@ -42,5 +42,30 @@ export const requestModel = {
       [...values, id]
     );
     return result.rows[0];
+  },
+
+  getByUser : async (userId) => {
+  const result = await pool.query(
+      `
+      SELECT 
+        r.id,
+        r.category,
+        r.info,
+        r.status,
+        r.created_at,
+        r.updated_at,
+        u.nom,
+        u.prenom,
+        u.email,
+        u.phone
+      FROM requests r
+      JOIN users u ON r.user_id = u.id
+      WHERE r.user_id = $1
+      ORDER BY r.created_at DESC
+      `,
+      [userId]
+    );
+
+    return result.rows;
   }
 };

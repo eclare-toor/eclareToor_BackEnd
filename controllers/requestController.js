@@ -51,5 +51,17 @@ export const requestController = {
     } catch (err) {
       res.status(400).json({ success: false, message: err.message });
     }
+  },
+
+  getMine : async (req, res) => {
+    try {
+      const result = await requestService.getByUser(
+        req.user,     // user depuis JWT
+        req.body      // body (utilisé seulement par admin)
+      );
+      res.json(result);
+    } catch (e) {
+      res.status(400).json({ error: e.message });
+    }
   }
 };
