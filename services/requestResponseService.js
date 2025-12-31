@@ -12,12 +12,6 @@ export const requestResponseService = {
 
       const response = await requestResponseModel.create(requestId, adminId, offer);
 
-      // Notification user
-      // NotificationService.notifyUserRequestResponse(userId, {
-      //   requestId,
-      //   category: requestExists[0].category
-      // });
-
       // 🔔 Notification USER
       const userId = requestExists[0].user_id;
 

@@ -53,4 +53,19 @@ export class authService {
     if (!user) throw new Error('Utilisateur non trouvé');
     return user;
   }
+  
+  // Suppression multiple d'utilisateurs
+  static async deleteMany(userIds, currentUser) {
+    if (currentUser.role !== 'admin') {
+      throw new Error('Accès refusé : Admin uniquement');
+    }
+
+    if (!userIds || userIds.length === 0) {
+      throw new Error('Aucun ID fourni');
+    }
+
+    const result = await UserModel.deleteMany(userIds);
+    return { message: `${userIds.length} utilisateurs supprimés` };
+  }
+
 }

@@ -1,6 +1,6 @@
 import express from 'express';
 import { authController } from '../controllers/authController.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticateToken , requireAnyRole} from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -10,5 +10,6 @@ router.post('/login', authController.login);
 
 // Routes protégées
 router.get('/profile', authenticateToken, authController.getProfile);
+router.delete('/', authenticateToken, requireAnyRole(["admin"]) ,authController.deleteManyUsers);
 
 export default router;

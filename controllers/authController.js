@@ -28,4 +28,16 @@ export class authController {
       res.status(404).json({ error: error.message });
     }
   }
+
+  static async deleteManyUsers(req, res) {
+    try {
+      const { userIds } = req.body; // Expect array of IDs
+      const currentUser = req.user; // Injecté par authenticateToken middleware
+
+      const result = await authService.deleteMany(userIds, currentUser);
+      res.json(result);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  }
 }

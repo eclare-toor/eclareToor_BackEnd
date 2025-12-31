@@ -33,6 +33,18 @@ export class UserModel {
     return result.rows[0];
   }
 
+  // Supprimer plusieurs utilisateurs
+  static async deleteMany(userIds = []) {
+    if (!Array.isArray(userIds) || userIds.length === 0) {
+      throw new Error("La liste des IDs est vide");
+    }
+
+    const placeholders = userIds.map((_, i) => `$${i + 1}`).join(',');
+    const sql = `DELETE FROM users WHERE id IN (${placeholders})`;
+
+    return await query(sql, userIds);
+  }
+
   // Hasher un mot de passe
   static async hashPassword(password) {
     return bcrypt.hash(password, 12);
