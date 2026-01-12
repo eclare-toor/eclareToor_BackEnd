@@ -6,18 +6,33 @@ import { NotificationService } from "./notificationServer.js";
 export const bookingService = {
   async create(user, data) {
     const { role, userId} = user;
-    const { user_id = null , trip_id, passengers_adult, passengers_child = 0, passengers_baby = 0 } = data;
+    const {
+      user_id = null,
+      trip_id,
+      passengers_adult,
+      passengers_child = 0,
+      passengers_baby = 0,
+      prix_calculer,
+      prix_vrai_paye
+    } = data;
+
     let userExists = null;
     let finalUserId;
 
-    if (!trip_id || passengers_adult == null) {
+    if (!trip_id || passengers_adult == null || prix_calculer == null) {
       throw new Error("Missing required fields");
     }
 
+    if (isNaN(prix_calculer) || prix_calculer <= 0) {
+      throw new Error("Invalid prix_calculer");
+    }
     // Vérifier que le trip existe
     const trip = await tripModel.getById(trip_id);
     if (!trip) throw new Error("Trip not found");
 
+    const finalPrixVrai = (user.role === "admin" && prix_vrai_paye)
+    ? prix_vrai_paye
+    : prix_calculer;
 
     if (role === "admin") {
 
@@ -64,7 +79,9 @@ export const bookingService = {
       trip_id,
       passengers_adult,
       passengers_child,
-      passengers_baby
+      passengers_baby,
+      prix_calculer,
+      finalPrixVrai
     );
      
     // Envoi de notification aux admins
@@ -91,14 +108,20 @@ export const bookingService = {
       if (user.role !== "admin" && booking.user_id !== user.userId) {
         throw new Error("You cannot modify this booking");
       }
-
       const fields = {};
+
+      if (data.prix_vrai_paye != null) {
+        if (user.role !== "admin") {
+          throw new Error("Only admin can modify price");
+        }
+        fields.prix_vrai_paye = data.prix_vrai_paye;
+      }
 
       // Update passengers
       if (data.passengers_adult != null) fields.passengers_adult = data.passengers_adult;
       if (data.passengers_child != null) fields.passengers_child = data.passengers_child;
       if (data.passengers_baby != null) fields.passengers_baby = data.passengers_baby;
-
+      fields.prix_calculer = data.prix_calculer != null ? data.prix_calculer : booking.prix_calculer; // keep original calculated price
       // Status update management
       if (data.status) {
         if (user.role !== "admin") {

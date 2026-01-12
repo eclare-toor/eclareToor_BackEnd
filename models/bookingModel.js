@@ -1,15 +1,25 @@
 import { pool } from "../config/database.js";
 
 export const bookingModel = {
-  create: async (userId, tripId, adult, child, baby) => {
+  create: async (userId, tripId, adult, child, baby, prix_calculer, prix_vrai_paye) => {
     const result = await pool.query(
-      `INSERT INTO bookings (user_id, trip_id, passengers_adult, passengers_child, passengers_baby, status)
-       VALUES ($1,$2,$3,$4,$5,'PENDING')
-       RETURNING *`,
-      [userId, tripId, adult, child, baby]
+      `INSERT INTO bookings 
+      (user_id, trip_id, passengers_adult, passengers_child, passengers_baby, status, prix_calculer, prix_vrai_paye)
+      VALUES ($1,$2,$3,$4,$5,'PENDING',$6,$7)
+      RETURNING *`,
+      [
+        userId,
+        tripId,
+        adult,
+        child,
+        baby,
+        prix_calculer,
+        prix_vrai_paye ?? prix_calculer   // 🔥 fallback
+      ]
     );
     return result.rows[0];
   },
+
 
   update: async (id, fields) => {
     const keys = Object.keys(fields);
