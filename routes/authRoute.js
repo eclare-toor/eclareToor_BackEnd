@@ -13,7 +13,7 @@ router.get('/profile', authenticateToken, checkUserActive ,authController.getPro
 router.delete('/', authenticateToken, requireAnyRole(["admin"]) ,authController.deleteManyUsers);
 router.get('/users', authenticateToken, requireAnyRole(["admin"]) ,authController.getAllUsers);
 router.post('/activate', authenticateToken, requireAnyRole(["admin"]) ,authController.activeUser);
-
+router.put("/update", authenticateToken, checkUserActive ,authController.updateUser);
 
 
 export default router;

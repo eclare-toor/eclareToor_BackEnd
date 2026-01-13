@@ -72,4 +72,20 @@ export class UserModel {
     );
     return result.rows[0];
   }
+
+  // update user details
+  static async update(id, fields) {
+    const keys = Object.keys(fields);
+    const values = Object.values(fields);
+
+    const setClause = keys.map((k, i) => `${k}=$${i + 1}`).join(", ");
+
+    const { rows } = await query(
+      `UPDATE users SET ${setClause} WHERE id=$${keys.length + 1}
+       RETURNING id, nom, prenom, email, phone, nationalite, role, is_active`,
+      [...values, id]
+    );
+
+    return rows[0];
+  }
 }

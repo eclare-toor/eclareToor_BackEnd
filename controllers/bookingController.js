@@ -48,5 +48,21 @@ export const bookingController = {
     } catch (e) {
       res.status(400).json({ error: e.message });
     }
+  },
+
+  async getByTrip(req, res) {
+    try {
+      const { tripId } = req.params;
+
+      const result = await bookingService.getByTrip(tripId);
+
+      res.json(result);
+
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        message: err.message
+      });
+    }
   }
 };

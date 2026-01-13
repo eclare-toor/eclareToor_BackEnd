@@ -80,5 +80,37 @@ export const bookingModel = {
       ORDER BY b.created_at DESC
     `);
     return result.rows;
+  },
+
+  getByTrip: async (tripId) => {
+    const { rows } = await pool.query(`
+      SELECT 
+        b.*,
+        u.nom,
+        u.prenom,
+        u.email
+      FROM bookings b
+      JOIN users u ON b.user_id = u.id
+      WHERE b.trip_id = $1
+      ORDER BY b.created_at DESC
+    `, [tripId]);
+
+    return rows;
+  },
+
+  statsByTrip: async (tripId) => {
+    const { rows } = await pool.query(`
+      SELECT
+        COUNT(*) AS total,
+        COUNT(*) FILTER (WHERE status='PENDING')   AS pending,
+        COUNT(*) FILTER (WHERE status='CONFIRMED') AS confirmed,
+        COUNT(*) FILTER (WHERE status='PAID')      AS paid,
+        COUNT(*) FILTER (WHERE status='CANCELLED') AS cancelled,
+        COALESCE(SUM(prix_vrai_paye), 0) AS revenue
+      FROM bookings
+      WHERE trip_id=$1
+    `, [tripId]);
+
+    return rows[0];
   }
 };

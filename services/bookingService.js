@@ -215,5 +215,23 @@ export const bookingService = {
 
   async delete(id) {
     return await bookingModel.delete(id);
+  },
+  
+  async getByTrip(tripId) {
+    const trip = await tripModel.getById(tripId);
+    if (!trip) throw new Error("Trip not found");
+
+    const bookings = await bookingModel.getByTrip(tripId);
+    const stats = await bookingModel.statsByTrip(tripId);
+
+    return {
+      trip: {
+        id: trip.id,
+        title: trip.title,
+        destination: trip.destination_country
+      },
+      stats,
+      bookings
+    };
   }
 };

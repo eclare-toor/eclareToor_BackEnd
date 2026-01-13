@@ -59,4 +59,38 @@ export class authController {
       res.status(400).json({ error: error.message });
     }
   }
+
+  // update profile method can be added here
+
+  static async updateUser(req, res){
+    try {
+      const connectedUser = req.user; // depuis JWT
+      const { id_user, ...data } = req.body;
+
+      let targetUserId;
+
+      // Admin → peut choisir qui modifier
+      if (connectedUser.role === "admin" && id_user) {
+        targetUserId = id_user;
+      }
+      // User → ne peut modifier que lui-même
+      else {
+        targetUserId = connectedUser.userId;
+      }
+
+      const user = await authService.updateUser(connectedUser, targetUserId, data);
+
+      res.json({ message: "User updated", user });
+
+    } catch (err) {
+      if (err.message === "FORBIDDEN")
+        return res.status(403).json({ message: "Access denied" });
+
+      if (err.message === "NO_FIELDS")
+        return res.status(400).json({ message: "No valid fields to update" });
+
+      res.status(500).json({ message: err.message });
+    }
+  }
+
 }

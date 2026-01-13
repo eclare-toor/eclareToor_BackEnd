@@ -87,4 +87,33 @@ export class authService {
     return userUpdate;
   }
 
+  // update user profile
+
+  static async updateUser(connectedUser, targetUserId, data){
+    // Si user normal → peut modifier que lui-même
+    if (connectedUser.role !== "admin" && connectedUser.userId !== targetUserId) {
+      throw new Error("FORBIDDEN");
+    }
+
+    const allowedFields = ["nom", "prenom", "phone", "nationalite", "linkfacebook", "email"];
+
+    // Admin peut aussi changer is_active et role
+    if (connectedUser.role === "admin") {
+      allowedFields.push("is_active", "role");
+    }
+
+    const fieldsToUpdate = {};
+    for (const key of allowedFields) {
+      if (data[key] !== undefined) {
+        fieldsToUpdate[key] = data[key];
+      }
+    }
+
+    if (Object.keys(fieldsToUpdate).length === 0) {
+      throw new Error("NO_FIELDS");
+    }
+
+    return await UserModel.update(targetUserId, fieldsToUpdate);
+  }
+
 }

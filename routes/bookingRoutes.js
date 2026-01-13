@@ -18,5 +18,7 @@ router.get("/", authenticateToken, requireAnyRole(["admin"]), bookingController.
 
 // ADMIN delete
 router.delete("/:id", authenticateToken, requireAnyRole(["admin"]), bookingController.delete);
+// Get bookings by trip (ADMIN only)
+router.get("/trip/:tripId", authenticateToken, requireAnyRole(["admin"]), bookingController.getByTrip);
 
 export default router;
