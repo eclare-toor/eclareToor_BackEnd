@@ -1,5 +1,4 @@
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -29,17 +28,26 @@ const PORT = process.env.PORT || 3000;
 // SECURITY MIDDLEWARES
 // ============================
 app.use(helmet({ crossOriginResourcePolicy: false }));
-
-const corsOptions = {
-  origin: [
+// Middleware de validation d'origine stricte
+app.use((req, res, next) => {
+  const allowedOrigins = [
     'https://eclairtravel.com',
     'https://www.eclairtravel.com'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
-app.use(cors(corsOptions));
+  ];
+  
+  const origin = req.headers.origin;
+  
+  // Autoriser les requêtes sans origine (Postman, curl, etc.)
+  // OU les origines autorisées
+  if (!origin || allowedOrigins.includes(origin)) {
+    next();
+  } else {
+    res.status(403).json({ 
+      error: 'Accès interdit - Origine non autorisée',
+      allowedOrigins: allowedOrigins
+    });
+  }
+});
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
