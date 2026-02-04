@@ -28,58 +28,17 @@ const PORT = process.env.PORT || 3000;
 // SECURITY MIDDLEWARES
 // ============================
 app.use(helmet({ crossOriginResourcePolicy: false }));
-// ============================
-// BLOCK ALL NON-AUTHORIZED ORIGINS
-// ============================
-app.use((req, res, next) => {
-  // List of allowed domains
-  const allowedOrigins = [
-    'https://eclairtravel.com',
-    'https://www.eclairtravel.com'
-  ];
-  
-  // Get request origin
-  const origin = req.headers.origin;
-  const referer = req.headers.referer;
-  
-  // Allow requests without origin (internal server requests)
-  if (!origin) {
-    return next();
-  }
-  
-  // Check if origin is allowed
-  if (allowedOrigins.includes(origin)) {
-    return next();
-  }
-  
-  // Additional check for referer (for same-origin requests)
-  if (referer) {
-    try {
-      const refererUrl = new URL(referer);
-      if (allowedOrigins.includes(refererUrl.origin)) {
-        return next();
-      }
-    } catch (error) {
-      // Invalid URL format
-    }
-  }
-  
-  // Block request with detailed logging
-  console.warn(`🚫 BLOCKED REQUEST:`, {
-    ip: req.ip,
-    origin,
-    referer,
-    method: req.method,
-    path: req.path,
-    userAgent: req.get('User-Agent')
-  });
-  
-  return res.status(403).json({
-    error: 'Accès interdit',
-    message: 'Cette API est réservée exclusivement à eclairtravel.com',
-    code: 'API_ACCESS_DENIED'
-  });
-});
+
+const corsOptions = {
+  origin: [
+    'https://eclairtravel.com/',
+    'https://www.eclairtravel.com/'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+app.use(cors(corsOptions));
 
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
