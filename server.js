@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 
 import authRoutes from './routes/authRoute.js';
 import notifRoutes from './routes/notificationRoute.js';
@@ -117,7 +118,7 @@ app.use((err, req, res, next) => {
 // SERVER
 // ============================
 app.listen(PORT, () => {
-  console.log(`✅ Serveur démarré sur http://localhost:${PORT}`);
+  console.log(`✅ Serveur démarré sur https://eclairtravel.com/`);
 });
 
 
